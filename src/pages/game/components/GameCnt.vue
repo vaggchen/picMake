@@ -29,7 +29,7 @@
       }"
     >
       <!-- {{ item.val ? item.val : '' }} -->
-      <img v-if="item.val" :src="getSrc(item.val)" alt="" />
+      <img :src="getSrc(item.val)" alt="" />
     </div>
   </div>
 </template>
