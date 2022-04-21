@@ -1,5 +1,5 @@
 <template>
-  <div class="cnt h-full relative grid gap-2 grid-cols-4" ref="cnt">
+  <div id="gameCnt" class="cnt h-full relative grid gap-2 grid-cols-4" ref="cnt">
     <!-- 展示底部格子 -->
     <div v-show="!lazyShow" v-for="(item, index ) in boxLists" class="box rounded-md "
       :style="{ width: itemWidth + 'px', height: itemWidth + 'px' }">
@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import '@/utils/listenTouch.js'
+
 import EventBus from '@/utils/eventBus.js'
 
 import haicaoPng from '@/assets/haicao.png'
@@ -54,11 +54,69 @@ const itemWidth = ref(0)
 
 //获取dom和渲染
 onMounted(() => {
+  import('@/utils/listenTouch.js')
   getCntWidth()
   lazyShow.value = false
 })
 // 初始化
 const init = () => {
+  // 初始化数组
+  valLists.value = new Array(rowLen * rowLen).fill(0).map((item, index) => ({
+    val: 0,
+    moveIndex: index
+  }))
+
+
+  // 测试代码
+  valLists.value[0] = {
+    val: 2,
+    moveIndex: 0
+  }
+  valLists.value[1] = {
+    val: 4,
+    moveIndex: 1
+  }
+  valLists.value[2] = {
+    val: 8,
+    moveIndex: 2
+  }
+  valLists.value[4] = {
+    val: 16,
+    moveIndex: 4
+  }
+  valLists.value[5] = {
+    val: 32,
+    moveIndex: 5
+  }
+  valLists.value[6] = {
+    val: 64,
+    moveIndex: 6
+  }
+  valLists.value[7] = {
+    val: 128,
+    moveIndex: 7
+  }
+  valLists.value[8] = {
+    val: 256,
+    moveIndex: 8
+  }
+  valLists.value[9] = {
+    val: 512,
+    moveIndex: 9
+  }
+  valLists.value[10] = {
+    val: 1024,
+    moveIndex: 10
+  }
+  valLists.value[11] = {
+    val: 2048,
+    moveIndex: 11
+  }
+  valLists.value[12] = {
+    val: 4096,
+    moveIndex: 12
+  }
+
   valLists.value = new Array(rowLen * rowLen).fill(0).map((item, index) => ({
     val: 0,
     moveIndex: index
@@ -67,55 +125,6 @@ const init = () => {
   randomNums()
   randomNums()
 
-  // 测试代码
-  // valLists.value[0] = {
-  //   val: 2,
-  //   moveIndex: 0
-  // }
-  // valLists.value[1] = {
-  //   val: 4,
-  //   moveIndex: 1
-  // }
-  // valLists.value[2] = {
-  //   val: 8,
-  //   moveIndex: 2
-  // }
-  // valLists.value[4] = {
-  //   val: 16,
-  //   moveIndex: 4
-  // }
-  // valLists.value[5] = {
-  //   val: 32,
-  //   moveIndex: 5
-  // }
-  // valLists.value[6] = {
-  //   val: 64,
-  //   moveIndex: 6
-  // }
-  // valLists.value[7] = {
-  //   val: 128,
-  //   moveIndex: 7
-  // }
-  // valLists.value[8] = {
-  //   val: 256,
-  //   moveIndex: 8
-  // }
-  // valLists.value[9] = {
-  //   val: 512,
-  //   moveIndex: 9
-  // }
-  // valLists.value[10] = {
-  //   val: 1024,
-  //   moveIndex: 10
-  // }
-  // valLists.value[11] = {
-  //   val: 2048,
-  //   moveIndex: 11
-  // }
-  // valLists.value[12] = {
-  //   val: 4096,
-  //   moveIndex: 12
-  // }
 }
 
 // 获取宽高
@@ -124,9 +133,7 @@ const getCntWidth = () => {
   itemWidth.value = (cnt.value.clientWidth - 2 * 16) / rowLen
 }
 
-// 生成 2或4 
-const randomNums = () => {
-  console.log('randomNums')
+const isGameOver = () => {
   // 如果不存在0时
   if (valLists.value.every(item => item.val !== 0)) {
     // 且每一个元素上下左右都不同
@@ -134,37 +141,44 @@ const randomNums = () => {
     for (let i = 0; i < rowLen * rowLen; i++) {
       // 该元素之上的值如果相等 则跳出
       let topInxdex = i - rowLen;
-      if (topInxdex > -1 && (valLists.value[i].val = valLists.value[topInxdex].val)) {
+      if (topInxdex > -1 && (valLists.value[i].val === valLists.value[topInxdex].val)) {
         noSame = false
         break
       }
 
       // 该元素之下的值如果相等 则跳出
       let botInxdex = i + rowLen;
-      if (botInxdex < valLists.value.length && (valLists.value[i].val = valLists.value[botInxdex].val)) {
+      if (botInxdex < valLists.value.length && (valLists.value[i].val === valLists.value[botInxdex].val)) {
         noSame = false
         break
       }
 
       // 该元素之左的值如果相等 则跳出
       let leftInxdex = i - 1;
-      if (leftInxdex > -1 && (parseInt(i / rowLen) === parseInt(leftInxdex / rowLen)) && (valLists.value[i].val = valLists.value[leftInxdex].val)) {
+      if (leftInxdex > -1 && (parseInt(i / rowLen) === parseInt(leftInxdex / rowLen)) && (valLists.value[i].val === valLists.value[leftInxdex].val)) {
         noSame = false
         break
       }
 
       // 该元素之右的值如果相等 则跳出
       let rightInxdex = i + 1;
-      if (rightInxdex < valLists.value.length && (parseInt(i / rowLen) === parseInt(rightInxdex / rowLen)) && (valLists.value[i].val = valLists.value[rightInxdex].val)) {
+      if (rightInxdex < valLists.value.length && (parseInt(i / rowLen) === parseInt(rightInxdex / rowLen)) && (valLists.value[i].val === valLists.value[rightInxdex].val)) {
         noSame = false
         break
       }
     }
     if (noSame) {
-      return false
+      return true
     }
 
   }
+  return false
+}
+
+// 生成 2或4 
+const randomNums = () => {
+  console.log('randomNums')
+
   // 生成随机数 生成2的概率越大越难
   const num = Math.random() > 0.7 ? 2 : 4
 
@@ -184,7 +198,6 @@ const randomNums = () => {
     val: num,
     moveIndex: index
   }
-  return true
 }
 
 // 生成对应src
@@ -203,7 +216,7 @@ const getSrc = (val) => {
     2048: longPng,
     4096: supermanPng,
   }
-  return val in map ? map[val] : '-'
+  return val in map ? map[val] : ''
 }
 
 // 生成对应class
@@ -269,9 +282,16 @@ const continueGame = (isMove) => {
     if (!isMove) {
       return
     }
-    let flag = randomNums()
-    // 是否还能生成随机数，不能则游戏结束
-    if (!flag) {
+    // 如果移动后无法移动则跳出
+    if (isGameOver()) {
+      gameOver()
+      return
+    }
+    // 生成随机数
+    randomNums()
+
+    // 生成随机数后是否无法移动
+    if (isGameOver()) {
       gameOver()
     }
   }, 250)

@@ -30,6 +30,20 @@
  
         return result;
     }
+    //手指接触reStart
+    document.querySelector('#reStart').addEventListener("touchstart", function(e) {
+      // 阻止浏览器默认
+      e.preventDefault()
+      EventBus.$emit('touchReStart')
+        
+    }, {passive: false});
+    //手指接触tip
+    document.querySelector('#tip').addEventListener("touchstart", function(e) {
+      // 阻止浏览器默认
+      e.preventDefault()
+      EventBus.$emit('touchTip',true)
+        
+    }, {passive: false});
     //手指接触屏幕
     document.addEventListener("touchstart", function(e) {
       // 阻止浏览器默认

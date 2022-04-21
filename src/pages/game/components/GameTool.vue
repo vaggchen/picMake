@@ -1,8 +1,8 @@
 <template>
   <div class="title px-4 h-32 flex items-end relative">
-    <!-- <img class="h-8 mb-4" :src="tipPng" alt=""> -->
+    <img id="tip" class="h-8 mb-4" :src="tipPng" alt="">
     <img :src="p2048JPEG" alt="" class="h-full m-auto" />
-    <img @click="clickReStart" class="h-8 mb-4 absolute bottom-2 right-5" :src="reStartPng" alt="">
+    <img id="reStart" class="h-8 mb-4 " :src="reStartPng" alt="">
   </div>
   <div class="p-2 flex ">
     <!-- 左侧监听步数 -->
@@ -16,14 +16,18 @@
       <p class="text-red-400">{{ maxScore }}</p>
     </div>
   </div>
+  <!-- 提示组件 -->
+  <Tip @click="closeTip" v-if="tipShow" />
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { computed } from '@vue/reactivity';
 import p2048JPEG from '@/assets/2048.jpeg'
 import tipPng from '@/assets/tip.png'
 import reStartPng from '@/assets/reStart.png'
-
+import EventBus from '@/utils/eventBus.js'
+import Tip from './Tip.vue'
 // 接收入参
 const props = defineProps({
   score: {
@@ -55,6 +59,28 @@ const maxScore = computed(() => {
 const clickReStart = () => {
   emit('reStart')
 }
+// 点击tip
+const clickTip = (flag) => {
+  tipShow.value = flag
+}
+
+// 设置tip展示
+const tipShow = ref(false)
+// 设置点击即可手动关闭
+const closeTip = () => {
+  tipShow.value = false
+}
+
+// 接收注册事件
+EventBus.$on('touchReStart', () => {
+  // alert('touchReStart')
+  clickReStart()
+})
+// 接收注册事件
+EventBus.$on('touchTip', (flag) => {
+  // alert('touchReStart')
+  clickTip(flag)
+})
 </script>
 <style scoped>
 .tool {
