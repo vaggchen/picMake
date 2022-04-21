@@ -20,7 +20,7 @@ import Tip from './components/Tip.vue'
 import GameCnt from './components/GameCnt.vue'
 import GameTool from './components/GameTool.vue'
 import GameOver from './components/GameOver.vue'
-
+import EventBus from '@/utils/eventBus.js'
 // 设置tip展示时间
 const tipShowTime = 2000
 // 设置tip展示
@@ -72,6 +72,11 @@ const reStart = () => {
   init()
 }
 
+// 接收注册事件
+EventBus.$on('touchReStart', () => {
+  // alert('touchReStart')
+  init()
+})
 init()
 </script>
 <style scoped>

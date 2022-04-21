@@ -71,11 +71,7 @@ const closeTip = () => {
   tipShow.value = false
 }
 
-// 接收注册事件
-EventBus.$on('touchReStart', () => {
-  // alert('touchReStart')
-  clickReStart()
-})
+
 // 接收注册事件
 EventBus.$on('touchTip', (flag) => {
   // alert('touchReStart')

@@ -117,13 +117,13 @@ const init = () => {
     moveIndex: 12
   }
 
-  valLists.value = new Array(rowLen * rowLen).fill(0).map((item, index) => ({
-    val: 0,
-    moveIndex: index
-  }))
-  // 初始化数组
-  randomNums()
-  randomNums()
+  // valLists.value = new Array(rowLen * rowLen).fill(0).map((item, index) => ({
+  //   val: 0,
+  //   moveIndex: index
+  // }))
+  // // 初始化数组
+  // randomNums()
+  // randomNums()
 
 }
 
